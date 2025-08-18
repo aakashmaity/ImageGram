@@ -1,19 +1,10 @@
 import { v2 as cloudinary } from "cloudinary";
-import { config } from "./envConfig";
+import { config } from "./envConfig.js";
 
-const cloudinaryConfig = () => {
-    try {
-        cloudinary.config({
-        cloud_name: config.cloudinary.cloudName,
-        api_key: config.cloudinary.apiKey,
-        api_secret: config.cloudinary.apiSecret
-    });
-    } catch (error) {
-        console.log("Something went wrong while configuring Cloudinary");
-        log.error(error.message);
-    }
-}
-
-cloudinaryConfig();
+cloudinary.config({
+    cloud_name: config.cloudinary.cloudName,
+    api_key: config.cloudinary.apiKey,
+    api_secret: config.cloudinary.apiSecret
+});
 
 export default cloudinary;

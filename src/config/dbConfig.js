@@ -4,7 +4,7 @@
 // Ex. Mongoose, Sequelize, TypeORM, Prisma
 
 import mongoose from "mongoose";
-import { config } from "./serverConfig.js";
+import { config } from "./envConfig.js";
 
 
 export default async function connectDB() {

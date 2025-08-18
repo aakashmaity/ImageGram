@@ -1,9 +1,10 @@
-export const createPost = async (createPostObject) => {
-    // 1. Take the image of the post and upload on aws
+import { createPost } from "../repositories/postRepo.js";
 
-    // 2. Get image url from aws response
+export const createPostService = async (createPostObject) => {
+    const caption = createPostObject.caption?.trim();
+    const image = createPostObject.image;
+    // const user = createPostObject.user;
 
-    // 3. create a post with caption, image url and user id in the db repository
-
-    // 4. return the post object
+    const newPost = await createPost(caption, image);
+    return newPost;
 }

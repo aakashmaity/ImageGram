@@ -1,14 +1,15 @@
-// server -> ODM (Object Document Mapper) -> Database
-// ODM library automatically converts methods into database queries
+// server -> ORM/ODM (Object Relation/Document Mapper) -> Database
+// ODM library acts as a interface b/w code and  raw queries
+// It automatically converts object oriented functions into database raw queries.
+// Ex. Mongoose, Sequelize, TypeORM, Prisma
 
 import mongoose from "mongoose";
-import dotenv from "dotenv";
+import { config } from "./serverConfig.js";
 
-dotenv.config();
 
 export default async function connectDB() {
-    try {
-        const data = await mongoose.connect(process.env.DB_URL)
+    try { 
+        const data = await mongoose.connect(config.db.url)
         console.log("Connected to MongoDB");
     } catch (error) {
         console.log("Something went wrong while connecting to the database");

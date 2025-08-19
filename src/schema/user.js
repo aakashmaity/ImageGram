@@ -10,7 +10,6 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true,
         minLength: 5,
         validate: {
             validator: function(emailValue) {

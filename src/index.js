@@ -1,24 +1,20 @@
 import express from "express";
 import connectDB from "./config/dbConfig.js";
-import postRouter from "./routers/post.js"
+import apiRouter from "./routers/apiRouter.js"
 
 const PORT = 3000;
 const app = express();
 
-app.use(express.json()); // Middleware for every single req to parse JSON req bodies
+app.use(express.text())
+app.use(express.json());      // Middleware for every single req to parse JSON req bodies
 app.use(express.urlencoded({ extended: true }));
-app.use('/posts', postRouter)
 
+app.use("/api", apiRouter)    // If any URL starts with /api, then forward to apiRouter to handle the request
 
 app.get("/", (req, res) => {
     return res.send("<h1>Welcome Home!</h1>");
 });
 
-
-
-// app.post("/post",upload.single('image'), createPost)
-
-// app.get("/post", findAllPosts)
 
 app.get("/hello", (req, res) => {
     const params = req.query;

@@ -9,6 +9,7 @@ const storage = new CloudinaryStorage({
     params:{
         folder: "imageGram",
         allowed_formats: ["jpg", "png", "jpeg"],
+        public_id: (req, file) => "post-" + Date.now() + Math.round(Math.random() * 1e9)
     }
 })
 

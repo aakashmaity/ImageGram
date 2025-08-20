@@ -8,8 +8,11 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params:{
         folder: "imageGram",
-        allowed_formats: ["jpg", "png", "jpeg"],
-        public_id: (req, file) => "post-"+Date.now() + Math.round(Math.random() * 1e9)
+        // allowed_formats: ["jpg", "png", "jpeg", "webp"],
+        public_id: (req, file) => {
+            // console.log("multer:filee -> ", file)
+            return "post-"+Date.now() + Math.round(Math.random() * 1e9)
+        }
     }
 })
 

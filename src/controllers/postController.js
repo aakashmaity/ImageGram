@@ -3,10 +3,27 @@ import { createPostService, deletePostByIdService, getAllPostsService, updatePos
 
 export async function createPost(req, res) {
     // call the service layer function
+    
+    const ACCEPTED_IMAGE_MIMETYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+    
+    const img = req.file
+    if(!img || !img?.path){
+        return res.status(400).json({
+            success: false,
+            message: "Image is required"
+        })
+    }
+    if(!ACCEPTED_IMAGE_MIMETYPES.includes(img?.mimetype)){
+        return res.status(400).json({
+            success: false,
+            message: "Only .jpg, .jpeg, .png, .webp files are supported"
+        })
+    }
+    
 
     const newPost = await createPostService({
         caption: req.body?.caption,
-        image: req.file?.path,
+        image: img?.path,
     })
 
 

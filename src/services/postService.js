@@ -1,9 +1,9 @@
 import { countAllPosts, createPost, deletePostById, findAllPosts, updatePostById } from "../repositories/postRepo.js";
 
-export const createPostService = async (createPostObject) => {
-    const caption = createPostObject.caption?.trim();
-    const image = createPostObject.image;
-    // const user = createPostObject.user;
+export const createPostService = async (post) => {
+    const caption = post.caption?.trim();
+    const image = post?.image;
+    // const user = post?.user;
     
     const newPost = await createPost(caption, image);
     return newPost;

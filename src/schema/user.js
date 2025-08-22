@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -24,6 +26,20 @@ const userSchema = new mongoose.Schema({
         minLength: 8,
     }
 }, { timestamps: true })
+
+
+// Triggers
+userSchema.pre('save', function modifyPassword(next) {
+    const user = this;
+
+    const salt = bcrypt.genSaltSync(9);
+    const hashedPassword = bcrypt.hashSync(user.password, salt)
+
+    user.password = hashedPassword;
+
+    next();
+})
+
 
 const User = mongoose.model("User", userSchema);
 

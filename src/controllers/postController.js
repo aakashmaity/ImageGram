@@ -3,35 +3,43 @@ import { createPostService, deletePostByIdService, getAllPostsService, updatePos
 
 export async function createPost(req, res) {
     // call the service layer function
-    
+
     const ACCEPTED_IMAGE_MIMETYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
-    
-    const img = req.file
-    if(!img || !img?.path){
-        return res.status(400).json({
+
+    try {
+        const img = req.file
+        if (!img || !img?.path) {
+            return res.status(400).json({
+                success: false,
+                message: "Image is required"
+            })
+        }
+        if (!ACCEPTED_IMAGE_MIMETYPES.includes(img?.mimetype)) {
+            return res.status(400).json({
+                success: false,
+                message: "Only .jpg, .jpeg, .png, .webp files are supported"
+            })
+        }
+
+
+        const newPost = await createPostService({
+            caption: req.body?.caption,
+            image: img?.path,
+        })
+
+
+        return res.status(201).json({
+            success: true,
+            message: "Post created successfully",
+            data: newPost
+        })
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500).json({
             success: false,
-            message: "Image is required"
+            message: "Internal server error"
         })
     }
-    if(!ACCEPTED_IMAGE_MIMETYPES.includes(img?.mimetype)){
-        return res.status(400).json({
-            success: false,
-            message: "Only .jpg, .jpeg, .png, .webp files are supported"
-        })
-    }
-    
-
-    const newPost = await createPostService({
-        caption: req.body?.caption,
-        image: img?.path,
-    })
-
-
-    return res.status(201).json({
-        success: true,
-        message: "Post created successfully",
-        data: newPost
-    })
 }
 
 //  get all post in paginated format -> /api/v1/posts?limit=10&offset=0  
@@ -86,14 +94,14 @@ export async function updatePost(req, res) {
         const postId = req.params.id;
         const updateObject = req.body
 
-        if(req?.file){
+        if (req?.file) {
             updateObject.image = req?.file?.path
         }
-                
+
         const response = await updatePostByIdService(postId, updateObject);
         return res.status(200).json({
             success: true,
-            message:"Post updated successfully",
+            message: "Post updated successfully",
             data: response
         })
     } catch (error) {

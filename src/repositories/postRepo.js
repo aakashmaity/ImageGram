@@ -5,7 +5,7 @@ export const createPost = async (caption, image, user) => {
         const newPost = Post.create({ caption, image, user });
         return newPost;
     } catch (error) {
-        console.log(error.message);
+        throw error;
     }
 }
 export const countAllPosts = async () => {
@@ -13,7 +13,7 @@ export const countAllPosts = async () => {
         const count = await Post.countDocuments();
         return count;
     } catch (error) {
-        console.log(error.message)
+        throw error;
     }
 }
 export const findAllPosts = async (offset, limit) => {
@@ -21,7 +21,7 @@ export const findAllPosts = async (offset, limit) => {
         const posts = await Post.find().sort({ createdAt: -1 }).skip(offset).limit(limit);
         return posts;
     } catch (error) {
-        console.log(error.message);
+        throw error;
     }
 }
 export const findPostById = async (postId) => {
@@ -29,8 +29,7 @@ export const findPostById = async (postId) => {
         const post = await Post.findById(postId)
         return post;
     } catch (error) {
-        console.log(error.message);
-
+        throw error;
     }
 }
 export const deletePostById = async (id) => {
@@ -38,7 +37,7 @@ export const deletePostById = async (id) => {
         const response = await Post.findByIdAndDelete(id);
         return response;
     } catch (error) {
-        console.log(error.message);
+        throw error;
     }
 }
 export const updatePostById = async (id, updateObject) => {
@@ -46,6 +45,6 @@ export const updatePostById = async (id, updateObject) => {
         const response = await Post.findByIdAndUpdate(id, updateObject, { new: true });   // option: { new: true} helps to return new updated post object instead of old one
         return response;
     } catch (error) {
-        console.log(error.message);
+        throw error;
     }
 }

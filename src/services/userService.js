@@ -5,6 +5,7 @@ export const signupUserService = async (user) => {
         const newUser = await createUser(user);
         return newUser;
     } catch (error) {
+        console.log(error.message)
         if(error.name === "MongoServerError" && error.code == 11000) {   // 11000 DuplicateKey error (already exists) 
             throw {
                 status: 400,

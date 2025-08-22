@@ -44,7 +44,6 @@ export async function createPost(req, res) {
 
 //  get all post in paginated format -> /api/v1/posts?limit=10&offset=0  
 export async function getAllPosts(req, res) {
-
     try {
         const offset = req.query?.offset || 0
         const limit = req.query?.limit || 10

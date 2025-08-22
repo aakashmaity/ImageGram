@@ -6,7 +6,6 @@ export const createUser = async (user) => {
         const newUser = await User.create(user);
         return newUser;
     } catch (error) {
-        console.log(error.message)
         throw error;
     }
 }
@@ -15,7 +14,6 @@ export const findUserByEmail = async (email) => {
         const user = await User.findOne({ email: email });
         return user;
     } catch (error) {
-        console.log(error.message);
         throw error;
     }
 }
@@ -25,7 +23,6 @@ export const findAllUsers = async () => {
         const users = await User.find();
         return users;
     } catch (error) {
-        console.log(error.message);
         throw error;
     }
 }

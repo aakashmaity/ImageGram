@@ -45,6 +45,15 @@ export const signinUserService = async(userDetails) => {
         throw error;
     }
 }
+export const checkIfUserExists = async(email) => {
+    try {
+        const user = await findUserByEmail(email);
+        return user;
+    } catch (error) {
+        console.log(error.message);
+        throw error;
+    }
+}
 export const getAllUsersService = async() => {
     try {
         const users = await findAllUsers();

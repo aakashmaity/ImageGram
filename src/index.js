@@ -1,7 +1,7 @@
 import express from "express";
 import connectDB from "./config/dbConfig.js";
 import apiRouter from "./routers/apiRouter.js"
-import multer from "multer";
+import { isAuthenticated } from "./middlewares/authMiddleware.js";
 
 const PORT = 3000;
 const app = express();
@@ -18,13 +18,17 @@ app.get("/", (req, res) => {
 });
 
 
-app.get("/hello", (req, res) => {
+app.get("/hello", isAuthenticated, (req, res) => {
     const params = req.query;
     console.log("Query Params:", params);
 
     const body = req.body;
     console.log("Request Body:", body);
-    return res.json({message: "Hello, World!", params, body});
+
+    const user = req?.user
+    console.log("userr: ", user);
+    
+    return res.json({message: "Hello, World!", params, body, user});
 })
 
 

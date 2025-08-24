@@ -19,13 +19,7 @@ const options = {
       }
     ],
     paths:{
-      "/hello": {
-        "get": {
-          "tag":[
-            'hola'
-          ]
-        }
-      }
+      
     }
   },
   apis: ['./src/routers/v1/*.js'], // Path to the API routes

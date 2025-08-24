@@ -17,11 +17,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api", apiRouter)    // If any URL starts with /api, then forward to apiRouter to handle the request
 
 app.get("/", (req, res) => {
-    return res.send("<h1>Welcome Home!</h1>");
+    return res.send("<h1>Welcome to ImageGram!</h1>");
 });
 
 
-app.get("/hello", (req, res) => {
+app.get("/ping", (req, res) => {
     const params = req.query;
     console.log("Query Params:", params);
 
@@ -31,7 +31,7 @@ app.get("/hello", (req, res) => {
     const user = req?.user
     console.log("userr: ", user);
     
-    return res.json({message: "Hello, World!", params, body, user});
+    return res.json({message: "Hello! pong", params, body, user});
 })
 
 

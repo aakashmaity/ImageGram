@@ -35,7 +35,12 @@ export async function createPost(req, res) {
             data: newPost
         })
     } catch (error) {
-        console.log(error.message)
+        if(error?.status) {
+            return res.status(error?.status).json({
+                success: false,
+                message: error?.message
+            })
+        }
         return res.status(500).json({
             success: false,
             message: "Internal server error"
@@ -57,7 +62,12 @@ export async function getAllPosts(req, res) {
             data: paginatedPosts
         })
     } catch (error) {
-        console.log(error.message)
+        if(error?.status) {
+            return res.status(error?.status).json({
+                success: false,
+                message: error?.message
+            })
+        }
         return res.status(500).json({
             success: false,
             message: "Internal server error"
@@ -66,8 +76,10 @@ export async function getAllPosts(req, res) {
 }
 export async function deletePost(req, res) {
     try {
+        const user = req?.user?._id
         const postId = req.params?.id
-        const response = await deletePostByIdService(postId);
+
+        const response = await deletePostByIdService(postId, user);
 
         if (!response) {
             return res.status(404).json({
@@ -82,7 +94,12 @@ export async function deletePost(req, res) {
             data: response
         })
     } catch (error) {
-        console.log(error.message)
+        if(error?.status) {
+            return res.status(error?.status).json({
+                success: false,
+                message: error?.message
+            })
+        }
         return res.status(500).json({
             success: false,
             message: "Internal server error"
@@ -105,7 +122,12 @@ export async function updatePost(req, res) {
             data: response
         })
     } catch (error) {
-        console.log(error.message)
+        if(error?.status) {
+            return res.status(error?.status).json({
+                success: false,
+                message: error?.message
+            })
+        }
         return res.status(500).json({
             success: false,
             message: "Internal server error"

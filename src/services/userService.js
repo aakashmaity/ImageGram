@@ -7,10 +7,11 @@ export const signupUserService = async (user) => {
         const newUser = await createUser(user);
         return newUser;
     } catch (error) {
-        console.log(error.message)
+        console.log(error)
         if(error.name === "MongoServerError" && error.code == 11000) {   // 11000 DuplicateKey error (already exists) 
             throw {
                 status: 400,
+                success: false,
                 message: "Username already exists"
             }
         }
@@ -24,6 +25,7 @@ export const signinUserService = async(userDetails) => {
         if(!user){
             throw {
                 status: 404,
+                success: false,
                 message: "User not found. Do register!"
             }
         }
@@ -33,6 +35,7 @@ export const signinUserService = async(userDetails) => {
         if(!isPasswordValid){
             throw {
                 status: 401,
+                success: false,
                 message: "Incorrect password!"
             }
         }
@@ -41,7 +44,7 @@ export const signinUserService = async(userDetails) => {
         return token;
 
     } catch (error) {
-        console.log(error.message)
+        console.log(error)
         throw error;
     }
 }
@@ -50,7 +53,7 @@ export const checkIfUserExists = async(email) => {
         const user = await findUserByEmail(email);
         return user;
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
         throw error;
     }
 }
@@ -59,7 +62,7 @@ export const getAllUsersService = async() => {
         const users = await findAllUsers();
         return users;
     } catch (error) {
-        console.log(error.message)
+        console.log(error)
         throw error;
     }
 }

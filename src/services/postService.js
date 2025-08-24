@@ -1,4 +1,4 @@
-import { countAllPosts, createPost, deletePostById, findAllPosts, updatePostById } from "../repositories/postRepo.js";
+import { countAllPosts, createPost, deletePostById, findAllPosts, findPostById, updatePostById } from "../repositories/postRepo.js";
 
 export const createPostService = async (postobject) => {
     try {
@@ -9,7 +9,7 @@ export const createPostService = async (postobject) => {
         const newPost = await createPost(caption, image, user);
         return newPost;
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
         throw error;
     }
 }
@@ -22,16 +22,34 @@ export const getAllPostsService = async (offset, limit) => {
 
         return { posts, totalDocuments, totalPages };
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
         throw error;
     }
 }
-export const deletePostByIdService = async (id) => {
+export const deletePostByIdService = async (id, user) => {
     try {
+
+        const postDetails = await findPostById(id);
+        if(!postDetails) {   // if post not found
+            throw {
+                status: 404,
+                success: false,
+                message: "Post not found"
+            }
+        } 
+
+        if(postDetails.user != user) {   // if postDetails.user or owner is not the logedin user .(checking ids)
+            throw {
+                status: 401,
+                success: false,
+                message: "Unauthorized to delete the post"
+            }
+        } 
+
         const response = await deletePostById(id);
         return response;
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
         throw error;
     }
 }
@@ -40,7 +58,7 @@ export const updatePostByIdService = async (id, updateObject) => {
         const response = await updatePostById(id, updateObject);
         return response;
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
         throw error;
     }
 }

@@ -9,6 +9,18 @@ import { zodSigninSchema } from "../../validators/zodSigninSchema.js";
 
 const router = express.Router();
 
+
+/**
+ * @swagger
+ * /users/signup:
+ *   post:
+ *     description: Register a new user!
+ *     responses:
+ *       200:
+ *         description: Registered successfully.
+ */
+
+
 router.get("/profile", getUserProfile);
 
 router.get("/", getAllUsers);

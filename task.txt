@@ -1,0 +1,11 @@
+1.  When one post deleted, image from cloudinary also must be deleted maybe using triggers 
+
+2.  Implement Likes and comments in a post. There must be some different types of likes present. ex. Love, support, celebrate etc,
+    If you have to change types of like, it should be technically doable.
+    We should be support for likes in a comment also.
+    Also Comments can be done in a comment.
+    1. Likes on posts and comments
+    2. Comments on a post and comment also
+
+3.  Complete Swagger docs by swagger openapi specifications
+4. 

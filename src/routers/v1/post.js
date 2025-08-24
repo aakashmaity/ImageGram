@@ -10,6 +10,17 @@ import { isAdmin, isAuthenticated } from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /posts:
+ *   post:
+ *     description: Create a new post!
+ *     responses:
+ *       200:
+ *         description: Post created successfully.
+ */
+
+
 router.post("/", isAuthenticated, upload.single("image"), validate(zodPostSchema), createPost);
 
 router.get("/", getAllPosts);

@@ -25,7 +25,7 @@ export const isAuthenticated = async(req, res, next) => {
                 message: "User not exists"
             })
         }
-        
+
         req.user = response;
         next();
 
@@ -35,4 +35,13 @@ export const isAuthenticated = async(req, res, next) => {
             message: "Invalid token"
         })
     }
+}
+export const isAdmin = async(req, res, next) => {
+    if(req?.user?.role != "admin"){
+        return res.status(401).json({
+            success: false,
+            message: "Unauthorized - You don't have permission"
+        })
+    }
+    next();
 }

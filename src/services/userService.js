@@ -1,4 +1,6 @@
-import { createUser, findAllUsers } from "../repositories/userRepo.js"
+import { createUser, findAllUsers, findUserByEmail } from "../repositories/userRepo.js"
+import bcrypt from "bcrypt"
+import { generateToken } from "../utils/jwt.js";
 
 export const signupUserService = async (user) => {
     try {
@@ -12,6 +14,34 @@ export const signupUserService = async (user) => {
                 message: "Username already exists"
             }
         }
+        throw error;
+    }
+}
+export const signinUserService = async(userDetails) => {
+    try {
+        const user = await findUserByEmail(userDetails?.email);
+
+        if(!user){
+            throw {
+                status: 404,
+                message: "User not found. Do register!"
+            }
+        }
+
+        const isPasswordValid = bcrypt.compareSync(userDetails?.password, user?.password);
+
+        if(!isPasswordValid){
+            throw {
+                status: 401,
+                message: "Incorrect password!"
+            }
+        }
+
+        const token = generateToken({ email: user.email, _id: user._id, username: user.username});
+        return token;
+
+    } catch (error) {
+        console.log(error.message)
         throw error;
     }
 }

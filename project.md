@@ -46,12 +46,13 @@ A backend project built with **Node.js, Express, Cloudinary, and AWS** featuring
     **AWS Deployment**  
     - Create EC2 instance  
     - Download `.pem` login key  
+    - Add Security permissions → Allow required ports (e.g., `3000`, `80`, `443`).  
     - Establish SSH connection from your local terminal
     - Clone repo & setup `.env`  
-    - Install `pm2` globally then → `pm2 start src/index.js`  
+    - Install `pm2` globally then → `pm2 start src/index.js`
     - Copy EC2 instance Public IP → Access in browser  
 
-13. **AWS Load Balancer Setup**  
+13. **AWS Load Balancer Setup manually from scratch**  
     - Create multiple EC2 instances  
     - Create multiple **Elastic IPs** and associate with instances. (Elastic IPs are permanent ip)
     - Start servers using `pm2` on each instance, So that server continuously running in background.
@@ -60,6 +61,8 @@ A backend project built with **Node.js, Express, Cloudinary, and AWS** featuring
     - Install **nginx** and configure. [refer this](https://github.com/aakashmaity/nginx-loadbalancer-config)
     - Copy the public address of `load-balancer` instance → Access in browser
 
+    **AWS EBS load balancer**
+    -  
 ---
 
 ## 🛠️ Tech Stack

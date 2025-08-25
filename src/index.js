@@ -4,6 +4,7 @@ import apiRouter from "./routers/apiRouter.js"
 import { isAuthenticated } from "./middlewares/authMiddleware.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swaggerConfig.js";
+import ip from "ip"
 
 const PORT = 3000;
 const app = express();
@@ -30,8 +31,10 @@ app.get("/ping", (req, res) => {
 
     const user = req?.user
     console.log("userr: ", user);
+
+    const ipAddr = ip.address();
     
-    return res.json({message: "Hello! pong", params, body, user});
+    return res.json({message: "Hello! pong",ip: ipAddr, params, body, user});
 })
 
 

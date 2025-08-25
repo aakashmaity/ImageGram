@@ -46,7 +46,7 @@ A backend project built with **Node.js, Express, Cloudinary, and AWS** featuring
     **AWS Deployment**  
     - Create EC2 instance  
     - Download `.pem` login key  
-    - Establish SSH connection  
+    - Establish SSH connection from your local terminal
     - Clone repo & setup `.env`  
     - Install `pm2` globally then → `pm2 start src/index.js`  
     - Copy EC2 instance Public IP → Access in browser  
@@ -56,7 +56,7 @@ A backend project built with **Node.js, Express, Cloudinary, and AWS** featuring
     - Create multiple **Elastic IPs** and associate with instances. (Elastic IPs are permanent ip)
     - Start servers using `pm2` on each instance, So that server continuously running in background.
     - Create another EC2 for `load-balancer`  
-    - Login into `load-balancer` by SSH
+    - Login into `load-balancer` by SSH connection in your local terminal
     - Install **nginx** and configure. [refer this](https://github.com/aakashmaity/nginx-loadbalancer-config)
     - Copy the public address of `load-balancer` instance → Access in browser
 

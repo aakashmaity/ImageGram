@@ -57,7 +57,7 @@ A backend project built with **Node.js, Express, Cloudinary, and AWS** featuring
     - Start servers using `pm2` on each instance, So that server continuously running in background.
     - Create another EC2 for `load-balancer`  
     - Login into `load-balancer` by SSH
-    - Install **nginx** and configure ([nginx config here](https://github.com/aakashmaity/nginx-loadbalancer-config))
+    - Install **nginx** and configure ([refer this](https://github.com/aakashmaity/nginx-loadbalancer-config))
     - Copy the public address of `load-balancer` instance → Access in browser
 
 ---

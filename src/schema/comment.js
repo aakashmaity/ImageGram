@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const commentSchema = new mongoose.Schema({
-    content:{
+    content: {
         type: String,
         required: true,
         minLength: 1,
@@ -14,13 +14,19 @@ const commentSchema = new mongoose.Schema({
     onModel: {
         type: String,
         required: true,
-        ref: ['Comment', 'Post'],
+        enum: ["Post", "Comment"],
     },
     commentableId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         refPath: 'onModel',
     },
+    likes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Like'
+        }
+    ],
     replies: [
         {
             type: mongoose.Schema.Types.ObjectId,

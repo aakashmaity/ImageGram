@@ -1,4 +1,4 @@
-import { createUser, findAllUsers, findUserByEmail } from "../repositories/userRepo.js"
+import { createUser, findAllUsers, findUserByEmail } from "../repositories/userRepository.js"
 import bcrypt from "bcrypt"
 import { generateToken } from "../utils/jwt.js";
 

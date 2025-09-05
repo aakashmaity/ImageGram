@@ -1,13 +1,21 @@
 import express from "express";
 import connectDB from "./config/dbConfig.js";
 import apiRouter from "./routers/apiRouter.js"
-import { isAuthenticated } from "./middlewares/authMiddleware.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swaggerConfig.js";
 import ip from "ip"
+import { rateLimit } from 'express-rate-limit'
 
 const PORT = 3000;
 const app = express();
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 500, // Limit each IP to 500 requests per `windowMS` (here, per 15 minutes)
+  message: 'Too many requests from this IP, please try again after a short break.'
+})
+
+app.use(limiter); // Apply rate limiting to all requests
 
 app.use(express.text())
 app.use(express.json());      // Middleware for every single req to parse JSON req bodies

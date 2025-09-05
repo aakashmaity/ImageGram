@@ -15,7 +15,8 @@ A backend project built with **Node.js, Express, Cloudinary, and AWS** featuring
      - Likes on posts and comments  
      - Comments on a post and comment also  
 3. Complete **Swagger docs** using OpenAPI specifications.  
-4. *(Reserved for future tasks)*  
+4. Applied rate-limiting strategies to prevent abuse, strengthen API security, and mitigate risks of DDoS attacks.(`express-rate-limit`)
+5. Store auth JWT token on the client side
 
 ---
 

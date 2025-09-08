@@ -59,7 +59,14 @@ app.get("/hello", (req, res) => {
 
 
 
-app.listen(PORT, () => {
-  console.log(`Server is running on ${process.env.FRONTEND_APP_URL}`);
-  connectDB();
+app.listen(PORT, async() => {
+  try {
+    await connectDB(); // wait until DB is ready
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on ${process.env.FRONTEND_APP_URL}`);
+    });
+  } catch (err) {
+    console.error("❌ Failed to connect DB", err);
+    process.exit(1); // exit if DB fails
+  }
 });

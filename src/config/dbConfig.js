@@ -6,13 +6,30 @@
 import mongoose from "mongoose";
 import { config } from "./envConfig.js";
 
+const MONGODB_URI = config.db.url;
+
+if (!MONGODB_URI) {
+    throw new Error("⚠️ Please define MONGODB_URI in your environment variables");
+}
+
+// Use global cache in serverless to avoid multiple connections
+let cached = global.mongoose;
+
+if (!cached) {
+    cached = global.mongoose = { conn: null, promise: null };
+}
 
 export default async function connectDB() {
-    try { 
-        const data = await mongoose.connect(config.db.url)
-        console.log("Connected to MongoDB");
-    } catch (error) {
-        console.log("Something went wrong while connecting to the database");
-        console.error(error);
+    if (cached.conn) return cached.conn;
+
+    if (!cached.promise) {
+        cached.promise = mongoose.connect(MONGODB_URI, {
+            // No need for useNewUrlParser or useUnifiedTopology in Mongoose v6+
+            bufferCommands: false, // optional: disables mongoose buffering
+        });
     }
+
+    cached.conn = await cached.promise;
+    console.log("Connected to MongoDB");
+    return cached.conn;
 }

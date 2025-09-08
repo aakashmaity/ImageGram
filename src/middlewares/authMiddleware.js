@@ -5,21 +5,12 @@ export const isAuthenticated = async(req, res, next) => {
 
     
     const token = req.cookies?.authToken;
-    console.log("cookieheader:",token)
+    console.log("cookieheader:",req.cookies, req.headers)
 
     if (!token) {
-      return res.status(401).json({ success: false,token, message: "No cookies found" });
+      return res.status(401).json({ success: false, token, message: "No authToken cookies found" });
     }
 
-    // Parse cookie string into object
-    // const cookies = Object.fromEntries(
-    //   cookieHeader.split(";").map((c) => {
-    //     const [key, value] = c.trim().split("=");
-    //     return [key, decodeURIComponent(value)];
-    //   })
-    // );
-
-    // const token = cookies.authToken;
 
     if(!token) {
         return res.status(400).json({

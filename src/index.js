@@ -12,6 +12,9 @@ const PORT = process.env.PORT || 8000;
 const app = express();
 
 
+// trust Vercel's reverse proxy so req.ip works correctly - for rate-limitting
+app.set("trust proxy", 1);
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 500, // Limit each IP to 500 requests per `windowMS` (here, per 15 minutes)

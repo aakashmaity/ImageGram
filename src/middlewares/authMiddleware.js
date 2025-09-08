@@ -3,8 +3,23 @@ import { verifyJWT } from "../utils/jwt.js";
 
 export const isAuthenticated = async(req, res, next) => {
 
-    // Check if jwt token is passed in the header
-    const token = req.headers['x-access-token'];
+    
+    const token = req.cookies?.authToken;
+    console.log("cookieheader:",token)
+
+    if (!token) {
+      return res.status(401).json({ success: false,token, message: "No cookies found" });
+    }
+
+    // Parse cookie string into object
+    // const cookies = Object.fromEntries(
+    //   cookieHeader.split(";").map((c) => {
+    //     const [key, value] = c.trim().split("=");
+    //     return [key, decodeURIComponent(value)];
+    //   })
+    // );
+
+    // const token = cookies.authToken;
 
     if(!token) {
         return res.status(400).json({
@@ -17,6 +32,7 @@ export const isAuthenticated = async(req, res, next) => {
     try {
         const response = verifyJWT(token);
 
+        console.log("Verified user in auth middleware:", response)
         const doesUserExists = await checkIfUserExists(response?.email);
 
         if(!doesUserExists){

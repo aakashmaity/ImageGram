@@ -5,9 +5,12 @@ import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swaggerConfig.js";
 import ip from "ip"
 import { rateLimit } from 'express-rate-limit'
+import cors from "cors"
+import cookieParser from "cookie-parser";
 
-const PORT = 3000;
+const PORT = process.env.PORT || 8000;
 const app = express();
+
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -22,6 +25,14 @@ app.use(express.json());      // Middleware for every single req to parse JSON r
 app.use(express.urlencoded({ extended: true }));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// For cross origin resource sharing with frontend 
+app.use(cors({
+  origin: [process.env.FRONTEND_APP_URL, "http://localhost:3000"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
+app.use(cookieParser())
+
 
 app.use("/api", apiRouter)    // If any URL starts with /api, then forward to apiRouter to handle the request
 
@@ -30,7 +41,7 @@ app.get("/", (req, res) => {
 });
 
 
-app.get("/ping", (req, res) => {
+app.get("/hello", (req, res) => {
     const params = req.query;
     console.log("Query Params:", params);
 
@@ -42,7 +53,7 @@ app.get("/ping", (req, res) => {
 
     const ipAddr = ip.address();
     
-    return res.json({message: "Hello! pong",ip: ipAddr, params, body, user});
+    return res.json({message: "Hello! World",ip: ipAddr, params, body, user});
 })
 
 

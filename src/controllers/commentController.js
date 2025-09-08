@@ -2,12 +2,14 @@ import { createCommentService, findCommentByIdService } from "../services/commen
 
 export async function createComment(req, res) {
     try {
+        // console.log("Request body:", req.body)
+        // console.log("Request user:", req.user._id)
         const { content, onModel, commentableId } = req.body;
         const newComment = await createCommentService(content, req.user._id, onModel, commentableId);
         return res.status(201).json({
             success: true,
             message: "Comment created successfully",
-            data: newComment
+            newComment: newComment
         })
 
     } catch (error) {

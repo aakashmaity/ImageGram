@@ -2,7 +2,7 @@ import { signupUserService, getAllUsersService, signinUserService } from "../ser
 
 
 export async function getUserProfile(req, res) {
-    
+
 
     return res.json({
         message: "Not implemented"
@@ -20,15 +20,16 @@ export async function getAllUsers(req, res) {
 
 export async function signup(req, res) {
     try {
-        const newUser = await signupUserService(req.body)
+        const {newUser, token} = await signupUserService(req.body)
 
         return res.status(201).json({
             success: true,
             message: "User created successfully",
-            data: newUser
+            data: newUser,
+            token: token
         })
     } catch (error) {
-        if(error?.status) {
+        if (error?.status) {
             return res.status(error?.status).json({
                 success: false,
                 message: error?.message
@@ -42,15 +43,16 @@ export async function signup(req, res) {
 }
 export async function signin(req, res) {
     try {
-        const response = await signinUserService(req.body);
+        const token = await signinUserService(req.body);
 
+        // Set the authentication token as a cookie in the response
         return res.status(200).json({
             success: true,
             message: "User signed in successfully",
-            data: response
+            token: token
         })
     } catch (error) {
-        if(error?.status) {
+        if (error?.status) {
             return res.status(error?.status).json({
                 success: false,
                 message: error?.message

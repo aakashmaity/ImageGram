@@ -25,6 +25,8 @@ router.post("/", isAuthenticated, upload.single("image"), validate(zodPostSchema
 
 router.get("/", getAllPosts);
 
+router.get("/:id/comments", getAllPosts);
+
 router.delete("/:id", isAuthenticated, deletePost);
 
 router.put("/:id", isAuthenticated, isAdmin, upload.single("image"), updatePost);  // Only Admin can update any post, Normal user cannot update any post details

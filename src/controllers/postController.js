@@ -35,7 +35,7 @@ export async function createPost(req, res) {
             data: newPost
         })
     } catch (error) {
-        if(error?.status) {
+        if (error?.status) {
             return res.status(error?.status).json({
                 success: false,
                 message: error?.message
@@ -54,15 +54,18 @@ export async function getAllPosts(req, res) {
         const offset = req.query?.offset || 0
         const limit = req.query?.limit || 10
 
-        const paginatedPosts = await getAllPostsService(offset, limit);
+        const { posts, totalDocuments, totalPages } = await getAllPostsService(offset, limit);
 
         return res.status(200).json({
             success: true,
             message: "Posts fetch successfully",
-            data: paginatedPosts
+            posts: posts,
+            totalDocuments,
+            totalPages,
+            currentPage: Math.ceil(offset / limit) + 1
         })
     } catch (error) {
-        if(error?.status) {
+        if (error?.status) {
             return res.status(error?.status).json({
                 success: false,
                 message: error?.message
@@ -94,7 +97,7 @@ export async function deletePost(req, res) {
             data: response
         })
     } catch (error) {
-        if(error?.status) {
+        if (error?.status) {
             return res.status(error?.status).json({
                 success: false,
                 message: error?.message
@@ -109,20 +112,22 @@ export async function deletePost(req, res) {
 export async function updatePost(req, res) {
     try {
         const postId = req.params.id;
-        const updateObject = req.body
+        const postData = req.body
+        console.log("Request body:", req.body)
+        console.log("Id data:", postId)
 
         if (req?.file) {
-            updateObject.image = req?.file?.path
+            postData.image = req?.file?.path
         }
 
-        const response = await updatePostByIdService(postId, updateObject);
+        const response = await updatePostByIdService(postId, postData);
         return res.status(200).json({
             success: true,
             message: "Post updated successfully",
             data: response
         })
     } catch (error) {
-        if(error?.status) {
+        if (error?.status) {
             return res.status(error?.status).json({
                 success: false,
                 message: error?.message

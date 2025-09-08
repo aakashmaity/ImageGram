@@ -1,3 +1,4 @@
+import { populate } from "dotenv";
 import Post from "../schema/post.js";
 
 export const createPost = async (caption, image, user) => {
@@ -18,7 +19,27 @@ export const countAllPosts = async () => {
 }
 export const findAllPosts = async (offset, limit) => {
     try {
-        const posts = await Post.find().sort({ createdAt: -1 }).skip(offset).limit(limit).populate('user', 'username email _id');
+        const posts = await Post.find().sort({ createdAt: -1 }).skip(offset).limit(limit)
+            .populate('user', 'username email _id')
+            .populate({
+                path: 'comments',
+                select: 'content userId onModel commentableId likes replies updatedAt',
+                populate: [
+                    {
+                        path: 'userId',
+                        select: 'username email'
+                    },
+                    {
+                        path: 'replies',
+                        select: 'userId onModel commentableId content _id',
+                        populate: {
+                            path: 'userId',
+                            select: 'username email'
+                        }
+                    }
+                ]
+            })
+
         return posts;
     } catch (error) {
         throw error;
@@ -40,9 +61,9 @@ export const deletePostById = async (id) => {
         throw error;
     }
 }
-export const updatePostById = async (id, updateObject) => {
+export const updatePostById = async (id, postData) => {
     try {
-        const response = await Post.findByIdAndUpdate(id, updateObject, { new: true });   // option: { new: true} helps to return new updated post object instead of old one
+        const response = await Post.findByIdAndUpdate(id, postData, { new: true });   // option: { new: true} helps to return new updated post object instead of old one
         return response;
     } catch (error) {
         throw error;

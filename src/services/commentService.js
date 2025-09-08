@@ -3,6 +3,7 @@ import { findPostById } from "../repositories/postRepository.js"
 
 export const createCommentService = async ( content, userId, onModel, commentableId ) => {
     try {
+        console.log("Service data:", content, userId, onModel, commentableId);
         const parent = await fetchCommentParent(onModel, commentableId);
 
         if(!parent){

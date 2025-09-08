@@ -53,9 +53,9 @@ export const deletePostByIdService = async (id, user) => {
         throw error;
     }
 }
-export const updatePostByIdService = async (id, updateObject) => {
+export const updatePostByIdService = async (id, postData) => {
     try {
-        const response = await updatePostById(id, updateObject);
+        const response = await updatePostById(id, postData);
         return response;
     } catch (error) {
         console.log(error);

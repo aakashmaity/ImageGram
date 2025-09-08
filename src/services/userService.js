@@ -5,10 +5,12 @@ import { generateToken } from "../utils/jwt.js";
 export const signupUserService = async (user) => {
     try {
         const newUser = await createUser(user);
-        return newUser;
+
+        const token = generateToken({ email: newUser.email, _id: newUser._id, username: newUser.username, role: newUser.role || 'user' });
+        return { token, newUser };
     } catch (error) {
         console.log(error)
-        if(error.name === "MongoServerError" && error.code == 11000) {   // 11000 DuplicateKey error (already exists) 
+        if (error.name === "MongoServerError" && error.code == 11000) {   // 11000 DuplicateKey error (already exists) 
             throw {
                 status: 400,
                 success: false,
@@ -18,11 +20,11 @@ export const signupUserService = async (user) => {
         throw error;
     }
 }
-export const signinUserService = async(userDetails) => {
+export const signinUserService = async (userDetails) => {
     try {
         const user = await findUserByEmail(userDetails?.email);
 
-        if(!user){
+        if (!user) {
             throw {
                 status: 404,
                 success: false,
@@ -32,7 +34,7 @@ export const signinUserService = async(userDetails) => {
 
         const isPasswordValid = bcrypt.compareSync(userDetails?.password, user?.password);
 
-        if(!isPasswordValid){
+        if (!isPasswordValid) {
             throw {
                 status: 401,
                 success: false,
@@ -48,7 +50,7 @@ export const signinUserService = async(userDetails) => {
         throw error;
     }
 }
-export const checkIfUserExists = async(email) => {
+export const checkIfUserExists = async (email) => {
     try {
         const user = await findUserByEmail(email);
         return user;
@@ -57,7 +59,7 @@ export const checkIfUserExists = async(email) => {
         throw error;
     }
 }
-export const getAllUsersService = async() => {
+export const getAllUsersService = async () => {
     try {
         const users = await findAllUsers();
         return users;

@@ -4,8 +4,8 @@ import { verifyJWT } from "../utils/jwt.js";
 export const isAuthenticated = async(req, res, next) => {
 
     
-    const token = req.cookies?.authToken;
-    console.log("cookieheader:",req.cookies, req.headers)
+    const token = req.headers?.authorization;
+    console.log("cookieheader:",token)
 
     if (!token) {
       return res.status(401).json({ success: false, token, message: "No authToken cookies found" });

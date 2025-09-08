@@ -4,7 +4,7 @@ dotenv.config();
 
 export const config = {
     db: {
-        url: process.env.DB_URL,
+        url: process.env.MONGODB_URL,
         password: process.env.DB_PASSWORD,
     },
     server: {

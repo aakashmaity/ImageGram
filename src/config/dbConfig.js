@@ -24,7 +24,6 @@ export default async function connectDB() {
 
     if (!cached.promise) {
         cached.promise = mongoose.connect(MONGODB_URI, {
-            // No need for useNewUrlParser or useUnifiedTopology in Mongoose v6+
             bufferCommands: false, // optional: disables mongoose buffering
         });
     }

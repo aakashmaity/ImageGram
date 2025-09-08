@@ -33,8 +33,8 @@ app.use(cors({
 }));
 app.use(cookieParser())
 
-
-app.use("/api", apiRouter)    // If any URL starts with /api, then forward to apiRouter to handle the request
+// Mount API under /api so paths are consistent locally and on Vercel
+app.use("/api", apiRouter)
 
 app.get("/", (req, res) => {
     return res.send("<h1>Welcome to ImageGram!</h1>");
@@ -56,17 +56,23 @@ app.get("/hello", (req, res) => {
     return res.json({message: "Hello! World",ip: ipAddr, params, body, user});
 })
 
+// Export serverless handler for Vercel
+export default async function handler(req, res) {
+  await connectDB();
+  return app(req, res);
+}
 
-
-
-app.listen(PORT, async() => {
-  try {
-    await connectDB(); // wait until DB is ready
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on ${process.env.FRONTEND_APP_URL}`);
-    });
-  } catch (err) {
-    console.error("❌ Failed to connect DB", err);
-    process.exit(1); // exit if DB fails
-  }
-});
+// Local development: start HTTP server if not running on Vercel
+if (!process.env.VERCEL) {
+  (async () => {
+    try {
+      await connectDB();
+      app.listen(PORT, () => {
+        console.log(`🚀 Server running locally on port ${PORT}`);
+      });
+    } catch (err) {
+      console.error("❌ Failed to start local server", err);
+      process.exit(1);
+    }
+  })();
+}

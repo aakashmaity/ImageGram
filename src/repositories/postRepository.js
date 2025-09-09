@@ -19,26 +19,7 @@ export const countAllPosts = async () => {
 }
 export const findAllPosts = async (offset, limit) => {
     try {
-        const posts = await Post.find().sort({ createdAt: -1 }).skip(offset).limit(limit)
-            .populate('user', 'username email _id')
-            .populate({
-                path: 'comments',
-                select: 'content userId onModel commentableId likes replies updatedAt',
-                populate: [
-                    {
-                        path: 'userId',
-                        select: 'username email'
-                    },
-                    {
-                        path: 'replies',
-                        select: 'userId onModel commentableId content _id',
-                        populate: {
-                            path: 'userId',
-                            select: 'username email'
-                        }
-                    }
-                ]
-            })
+        const posts = await Post.find().sort({ createdAt: -1 }).skip(offset).limit(limit).populate('user', 'username email _id')
 
         return posts;
     } catch (error) {

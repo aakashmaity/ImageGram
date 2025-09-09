@@ -1,12 +1,12 @@
-import { createComment, findCommentById } from "../repositories/commentRepository.js"
+import { countAllComments, createComment, findCommentById, findCommentsByCommentableId } from "../repositories/commentRepository.js"
 import { findPostById } from "../repositories/postRepository.js"
 
-export const createCommentService = async ( content, userId, onModel, commentableId ) => {
+export const createCommentService = async (content, userId, onModel, commentableId) => {
     try {
-        console.log("Service data:", content, userId, onModel, commentableId);
+        
         const parent = await fetchCommentParent(onModel, commentableId);
 
-        if(!parent){
+        if (!parent) {
             throw {
                 status: 404,
                 message: `${onModel} not exists`
@@ -24,17 +24,33 @@ export const createCommentService = async ( content, userId, onModel, commentabl
         throw error;
     }
 }
-export const findCommentByIdService = async(id) => {
+export const findCommentByIdService = async (id) => {
     try {
         const comment = await findCommentById(id);
 
-        if(!comment) {
+        if (!comment) {
             throw {
                 status: 404,
                 message: "Comment not exists"
             }
         }
         return comment;
+
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+export const findCommentsByCommentableIdService = async (onModel, commentableId, offset, limit) => {
+    try {
+        
+        const comments = await findCommentsByCommentableId(onModel, commentableId, offset, limit);
+
+        const totalDocuments = await countAllComments(onModel, commentableId);
+        const totalPages = Math.ceil(totalDocuments / limit);
+
+        return { comments, totalDocuments, totalPages };
 
     } catch (error) {
         console.log(error);
@@ -64,9 +80,9 @@ const fetchCommentParent = async (onModel, commentableId) => {
 }
 const addChildCommentToParent = async (onModel, comment, parent) => {
     try {
-        if(onModel.toLowerCase() === "post"){
+        if (onModel.toLowerCase() === "post") {
             parent.comments.push(comment._id);
-        } else if(onModel.toLowerCase() === "comment"){
+        } else if (onModel.toLowerCase() === "comment") {
             parent.replies.push(comment._id);
         }
         await parent.save();

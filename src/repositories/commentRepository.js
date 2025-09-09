@@ -26,3 +26,31 @@ export const findCommentById = async (id) => {
         throw error;
     }
 }
+
+export const findCommentsByCommentableId = async (onModel, commentableId, offset = 0, limit = 5) => {
+    try {
+
+        const comments = await Comment.find({ onModel, commentableId }).sort({ createdAt: -1 }).skip(offset).limit(limit)
+            .populate('userId', 'username email _id')
+            .populate({
+                path: 'replies',
+                select: 'userId onModel commentableId content updatedAt _id',
+                populate: {
+                    path: 'userId',
+                    select: 'username email'
+                }
+            });
+        return comments;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const countAllComments = async (onModel, commentableId) => {
+    try {
+        const count = await Comment.countDocuments({ onModel, commentableId});
+        return count;
+    } catch (error) {
+        throw error;
+    }
+}

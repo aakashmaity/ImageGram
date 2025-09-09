@@ -1,4 +1,4 @@
-import { createCommentService, findCommentByIdService } from "../services/commentService.js"
+import { createCommentService, findCommentByIdService, findCommentsByCommentableIdService } from "../services/commentService.js"
 
 export async function createComment(req, res) {
     try {
@@ -34,6 +34,35 @@ export async function getCommentById(req, res) {
             success: true,
             message: "Comment fetched successfully",
             data: response
+        })
+
+    } catch (error) {
+        if (error?.status) {
+            return res.status(error?.status).json({
+                success: false,
+                message: error?.message
+            })
+        }
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
+    }
+}
+
+export async function getCommentsByCommentableId(req, res) {
+    try {
+        const { onModel, id: commentableId } = req.params;
+        const { offset, limit } = req.query;
+
+
+        const {comments , totalDocuments, totalPages} = await findCommentsByCommentableIdService(onModel, commentableId, offset, limit);
+        return res.status(200).json({
+            success: true,
+            message: "Comments fetched successfully",
+            comments,
+            totalDocuments,
+            totalPages
         })
 
     } catch (error) {

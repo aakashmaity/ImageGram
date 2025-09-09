@@ -4,7 +4,7 @@ import { verifyJWT } from "../utils/jwt.js";
 export const isAuthenticated = async(req, res, next) => {
 
     
-    const token = req.headers?.authorization;
+    const token = req.headers?.authorization || req.cookies?.authToken;
     console.log("cookieheader:",token)
 
     if (!token) {

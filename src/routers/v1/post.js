@@ -3,7 +3,7 @@
 
 import express from "express";
 import upload from "../../config/multerConfig.js"
-import { createPost, deletePost, getAllPosts, updatePost } from "../../controllers/postController.js";
+import { createPost, deletePost, getAllPosts, getPostsMadeByUser, updatePost } from "../../controllers/postController.js";
 import { validate } from "../../validators/zodValidator.js";
 import { zodPostSchema } from "../../validators/zodPostSchema.js";
 import { isAdmin, isAuthenticated } from "../../middlewares/authMiddleware.js";
@@ -23,7 +23,9 @@ const router = express.Router();
 
 router.post("/", isAuthenticated, upload.single("image"), validate(zodPostSchema), createPost);
 
-router.get("/", getAllPosts);
+router.get("/", isAuthenticated, getAllPosts);
+
+router.get("/user/:userId", isAuthenticated, getPostsMadeByUser);
 
 router.get("/:id/comments", getAllPosts);
 

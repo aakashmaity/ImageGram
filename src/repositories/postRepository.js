@@ -9,9 +9,9 @@ export const createPost = async (caption, image, user) => {
         throw error;
     }
 }
-export const countAllPosts = async () => {
+export const countAllPosts = async (userId) => {
     try {
-        const count = await Post.countDocuments();
+        const count = await Post.countDocuments({ user: userId });
         return count;
     } catch (error) {
         throw error;
@@ -19,13 +19,25 @@ export const countAllPosts = async () => {
 }
 export const findAllPosts = async (offset, limit) => {
     try {
-        const posts = await Post.find().sort({ createdAt: -1 }).skip(offset).limit(limit).populate('user', 'username email _id')
+        const posts = await Post.find().sort({ createdAt: -1 }).skip(Number(offset)).limit(Number(limit)).populate('user', 'username email _id')
 
         return posts;
     } catch (error) {
         throw error;
     }
 }
+
+export const findPostMadeByUser = async (userId, offset, limit) => {
+    try {
+        console.log("userId in repo:", userId);
+        const posts = await Post.find({user: userId}).sort({ createdAt: -1 }).skip(Number(offset)).limit(Number(limit)).populate('user', 'username email _id');
+
+        return posts;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const findPostById = async (postId) => {
     try {
         const post = await Post.findById(postId)

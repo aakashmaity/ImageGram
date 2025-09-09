@@ -1,4 +1,4 @@
-import { createPostService, deletePostByIdService, getAllPostsService, updatePostByIdService } from "../services/postService.js";
+import { createPostService, deletePostByIdService, getAllPostsService, getPostsMadeByUserService, updatePostByIdService } from "../services/postService.js";
 
 
 export async function createPost(req, res) {
@@ -77,6 +77,38 @@ export async function getAllPosts(req, res) {
         })
     }
 }
+
+export async function getPostsMadeByUser(req, res) {
+    try {
+        const userId = req.params.userId;
+        const offset = req.query?.offset || 0
+        const limit = req.query?.limit || 10
+
+        const { posts, totalDocuments, totalPages } = await getPostsMadeByUserService(userId, offset, limit);
+
+        return res.status(200).json({
+            success: true,
+            message: "Posts fetch successfully",
+            posts: posts,
+            totalDocuments,
+            totalPages,
+            currentPage: Math.ceil(offset / limit) + 1
+        })
+    } catch (error) {
+        if (error?.status) {
+            return res.status(error?.status).json({
+                success: false,
+                message: error?.message
+            })
+        }
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
+    }
+}
+
+
 export async function deletePost(req, res) {
     try {
         const user = req?.user?._id

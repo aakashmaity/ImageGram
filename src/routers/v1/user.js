@@ -21,7 +21,7 @@ const router = express.Router();
  */
 
 
-router.get("/profile", getUserProfile);
+router.get("/:id", getUserProfile);
 
 router.get("/", getAllUsers);
 

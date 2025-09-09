@@ -1,4 +1,4 @@
-import { createUser, findAllUsers, findUserByEmail } from "../repositories/userRepository.js"
+import { createUser, findAllUsers, findUserByEmail, findUserById } from "../repositories/userRepository.js"
 import bcrypt from "bcrypt"
 import { generateToken } from "../utils/jwt.js";
 
@@ -63,6 +63,22 @@ export const getAllUsersService = async () => {
     try {
         const users = await findAllUsers();
         return users;
+    } catch (error) {
+        console.log(error)
+        throw error;
+    }
+}
+export const findUserByIdService = async (id) => {
+    try {
+        const user = await findUserById(id);
+        if (!user) {
+            throw {
+                status: 404,
+                success: false,
+                message: "User not found"
+            }
+        }
+        return user;
     } catch (error) {
         console.log(error)
         throw error;

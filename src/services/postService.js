@@ -61,7 +61,10 @@ export const deletePostByIdService = async (id, user) => {
         } 
 
         const response = await deletePostById(id);
-        return response;
+        const totalDocuments = await countAllPosts();
+
+
+        return {response, totalDocuments};
     } catch (error) {
         console.log(error);
         throw error;

@@ -1,4 +1,4 @@
-import { signupUserService, getAllUsersService, signinUserService, findUserByIdService } from "../services/userService.js"
+import { signupUserService, getAllUsersService, signinUserService, findUserByIdService, getSearchUsersService } from "../services/userService.js"
 
 
 export async function getUserProfile(req, res) {
@@ -94,4 +94,30 @@ export async function signin(req, res) {
             message: "Internal server error"
         })
     }
+}
+export async function getSearchUsers(req, res) {
+    try {
+
+        const { search, offset = 0, limit = 10 } = req.query;
+        const { users, totalDocuments } = await getSearchUsersService(search, offset, limit);
+
+        return res.status(200).json({
+            success: true,
+            message: "Fetched all users",
+            users,
+            totalDocuments
+        })
+    } catch (error) {
+        if (error?.status) {
+            return res.status(error?.status).json({
+                success: false,
+                message: error?.message
+            })
+        }
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
+    }
+
 }

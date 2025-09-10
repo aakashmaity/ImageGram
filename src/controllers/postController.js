@@ -114,7 +114,7 @@ export async function deletePost(req, res) {
         const user = req?.user?._id
         const postId = req.params?.id
 
-        const response = await deletePostByIdService(postId, user);
+        const {response, totalDocuments} = await deletePostByIdService(postId, user);
 
         if (!response) {
             return res.status(404).json({
@@ -126,7 +126,8 @@ export async function deletePost(req, res) {
         return res.json({
             success: true,
             message: "Post deleted Successfully",
-            data: response
+            data: response,
+            totalDocuments,
         })
     } catch (error) {
         if (error?.status) {

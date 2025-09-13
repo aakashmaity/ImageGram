@@ -1,4 +1,3 @@
-import { populate } from "dotenv";
 import Comment from "../schema/comment.js"
 
 export const createComment = async (content, userId, onModel, commentableId) => {

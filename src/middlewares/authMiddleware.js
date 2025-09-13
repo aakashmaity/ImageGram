@@ -5,7 +5,7 @@ export const isAuthenticated = async(req, res, next) => {
 
     
     const token = req.headers?.authorization || req.cookies?.authToken;
-    console.log("cookieheader:",token)
+    // console.log("cookieheader:",token)
 
     if (!token) {
       return res.status(401).json({ success: false, token, message: "No authToken cookies found" });

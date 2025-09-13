@@ -7,6 +7,7 @@ import { createPost, deletePost, getAllPosts, getPostsMadeByUser, updatePost } f
 import { validate } from "../../validators/zodValidator.js";
 import { zodPostSchema } from "../../validators/zodPostSchema.js";
 import { isAdmin, isAuthenticated } from "../../middlewares/authMiddleware.js";
+import { createLike } from "../../controllers/likeController.js";
 
 const router = express.Router();
 
@@ -23,6 +24,8 @@ const router = express.Router();
 
 router.post("/", isAuthenticated, upload.single("image"), validate(zodPostSchema), createPost);
 
+router.post("/:id/like", isAuthenticated, createLike);
+
 router.get("/", isAuthenticated, getAllPosts);
 
 router.get("/user/:userId", isAuthenticated, getPostsMadeByUser);
@@ -32,6 +35,7 @@ router.get("/:id/comments", getAllPosts);
 router.delete("/:id", isAuthenticated, deletePost);
 
 router.put("/:id", isAuthenticated, isAdmin, upload.single("image"), updatePost);  // Only Admin can update any post, Normal user cannot update any post details
+
 
 
 

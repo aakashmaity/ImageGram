@@ -23,7 +23,7 @@ export const isAuthenticated = async(req, res, next) => {
     try {
         const response = verifyJWT(token);
 
-        console.log("Verified user in auth middleware:", response)
+        // console.log("Verified user in auth middleware:", response)
         const doesUserExists = await checkIfUserExists(response?.email);
 
         if(!doesUserExists){

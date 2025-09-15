@@ -12,9 +12,9 @@ export const createPost = async (caption, image, user) => {
 export const countAllPosts = async (userId = null) => {
     try {
         let count = 0;
-        if(userId){
+        if (userId) {
             count = await Post.countDocuments({ user: userId });
-        }else {
+        } else {
             count = await Post.countDocuments();
         }
         return count;
@@ -24,7 +24,14 @@ export const countAllPosts = async (userId = null) => {
 }
 export const findAllPosts = async (offset, limit) => {
     try {
-        const posts = await Post.find().sort({ createdAt: -1 }).skip(Number(offset)).limit(Number(limit)).populate('user', 'username email _id')
+        const posts = await Post.find().sort({ createdAt: -1 }).skip(Number(offset)).limit(Number(limit)).populate([
+            { path: 'user', select: 'username email _id' },
+            {
+                path: "likes",
+                select: "likeType user _id",
+                populate: { path: "user", select: "username _id" }
+            }
+        ])
 
         return posts;
     } catch (error) {

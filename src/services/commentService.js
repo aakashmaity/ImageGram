@@ -17,6 +17,8 @@ export const createCommentService = async (content, userId, onModel, commentable
 
         await addChildCommentToParent(onModel, newComment, parent);
 
+        console.log("New comment created")
+
         return newComment;
 
     } catch (error) {

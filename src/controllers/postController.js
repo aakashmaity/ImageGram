@@ -53,8 +53,9 @@ export async function getAllPosts(req, res) {
     try {
         const offset = req.query?.offset || 0
         const limit = req.query?.limit || 10
+        const userId = req.user?._id
 
-        const { posts, totalDocuments, totalPages } = await getAllPostsService(offset, limit);
+        const { posts, totalDocuments, totalPages } = await getAllPostsService(userId, offset, limit);
 
         return res.status(200).json({
             success: true,

@@ -7,20 +7,30 @@ export const createPostService = async (postobject) => {
         const user = postobject?.user;
 
         const newPost = await createPost(caption, image, user);
+        console.log("New post created")
         return newPost;
     } catch (error) {
         console.log(error);
         throw error;
     }
 }
-export const getAllPostsService = async (offset, limit) => {
+export const getAllPostsService = async (userId, offset, limit) => {
     try {
         const posts = await findAllPosts(offset, limit)
 
         const totalDocuments = await countAllPosts();
         const totalPages = Math.ceil(totalDocuments / limit);
 
-        return { posts, totalDocuments, totalPages };
+        const postWithCurrUserLike = posts.map(post => {
+            const userLike = post.likes.find(like => like?.user && like?.user?._id.toString() === userId.toString());
+
+            return {
+                ...post.toObject(),
+                currentUserLike : userLike ? userLike : null
+            }
+        })
+
+        return { posts: postWithCurrUserLike, totalDocuments, totalPages };
     } catch (error) {
         console.log(error);
         throw error;
@@ -63,7 +73,7 @@ export const deletePostByIdService = async (id, user) => {
         const response = await deletePostById(id);
         const totalDocuments = await countAllPosts();
 
-
+        console.log("Post deleted")
         return {response, totalDocuments};
     } catch (error) {
         console.log(error);
@@ -73,6 +83,8 @@ export const deletePostByIdService = async (id, user) => {
 export const updatePostByIdService = async (id, postData) => {
     try {
         const response = await updatePostById(id, postData);
+
+        console.log("Post updated.")
         return response;
     } catch (error) {
         console.log(error);

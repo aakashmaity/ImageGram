@@ -1,11 +1,11 @@
 import Like from "../schema/like.js"
 
-export const createLike = async (likeType, userId, onModel, likableId) => {
+export const createLike = async (likeType, user, onModel, likableId) => {
     try {
-        let newLike = await Like.create({ likeType: likeType.toLowerCase(), userId, onModel, likableId });
+        let newLike = await Like.create({ likeType, user, onModel, likableId });
 
         newLike = await newLike.populate([
-            { path: "userId", select: "username email _id" },
+            { path: "user", select: "username email _id" },
         ]);
         return newLike;
     } catch (error) {
@@ -13,39 +13,33 @@ export const createLike = async (likeType, userId, onModel, likableId) => {
     }
 }
 
+export const updateLikeById = async (id, likeType, user, onModel, likableId) => {
+    try {
+        const updatedLike = await Like.findByIdAndUpdate(id, { likeType, user, onModel, likableId }, { new: true })
+            .populate([
+                { path: "user", select: "username email _id" },
+            ]);
+        return updatedLike;
 
-// export const findCommentById = async (id) => {
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const deleteLikeById = async (id) => {
+    try {
+        const deletedLike = await Like.findByIdAndDelete(id);
+        return deletedLike;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// export const findLikesMadeByUserId = async (userId, onModel, likableId) => {
 //     try {
-//         const comment = await Comment.findById(id).populate('userId', 'username email _id').populate('replies', 'userId onModel commentableId content replies _id');
-//         return comment;
-//     } catch (error) {
-//         throw error;
-//     }
-// }
-
-// export const findCommentsByCommentableId = async (onModel, commentableId, offset = 0, limit = 5) => {
-//     try {
-
-//         const comments = await Comment.find({ onModel, commentableId }).sort({ createdAt: -1 }).skip(offset).limit(limit)
-//             .populate('userId', 'username email _id')
-//             .populate({
-//                 path: 'replies',
-//                 select: 'userId onModel commentableId content updatedAt _id',
-//                 populate: {
-//                     path: 'userId',
-//                     select: 'username email'
-//                 }
-//             });
-//         return comments;
-//     } catch (error) {
-//         throw error;
-//     }
-// }
-
-// export const countAllComments = async (onModel, commentableId) => {
-//     try {
-//         const count = await Comment.countDocuments({ onModel, commentableId });
-//         return count;
+//         const likes = await Like.find({ userId, onModel, likableId }).populate('userId', 'username email _id');
+//         console.log("Likes in repo:", likes);
+//         return likes;
 //     } catch (error) {
 //         throw error;
 //     }

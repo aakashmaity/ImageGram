@@ -1,11 +1,11 @@
 import { findCommentById } from "../repositories/commentRepository.js";
-import { createLike } from "../repositories/likeRepository.js";
+import { createLike, deleteLikeById, updateLikeById } from "../repositories/likeRepository.js";
 import { findPostById } from "../repositories/postRepository.js";
 
 
-export const createLikeService = async (likeType, userId, onModel, likableId) => {
+export const createLikeService = async (likeType, user, onModel, likableId) => {
     try {
-        
+
         const parent = await fetchLikableParent(onModel, likableId);
 
         if (!parent) {
@@ -15,10 +15,11 @@ export const createLikeService = async (likeType, userId, onModel, likableId) =>
             }
         }
 
-        const newLike = await createLike(likeType, userId, onModel, likableId);
+        const newLike = await createLike(likeType, user, onModel, likableId);
 
         await addChildReactionToParent(onModel, newLike, parent);
 
+        console.log(`Reaction created with type: ${likeType}`)
         return newLike;
 
     } catch (error) {
@@ -26,39 +27,54 @@ export const createLikeService = async (likeType, userId, onModel, likableId) =>
         throw error;
     }
 }
-// export const findCommentByIdService = async (id) => {
-//     try {
-//         const comment = await findCommentById(id);
 
-//         if (!comment) {
-//             throw {
-//                 status: 404,
-//                 message: "Comment not exists"
-//             }
-//         }
-//         return comment;
+export const updateLikeService = async (id, likeType, user, onModel, likableId) => {
+    try {
+        const parent = await fetchLikableParent(onModel, likableId);
+        if (!parent) {
+            throw {
+                status: 404,
+                message: `${onModel} not exists`
+            }
+        }
 
-//     } catch (error) {
-//         console.log(error);
-//         throw error;
-//     }
-// }
+        const updatedLike = await updateLikeById(id, likeType, user, onModel, likableId);
+        console.log(`Reaction updated to ${likeType}`)
+        return updatedLike;
 
-// export const findCommentsByCommentableIdService = async (onModel, commentableId, offset, limit) => {
-//     try {
-        
-//         const comments = await findCommentsByCommentableId(onModel, commentableId, offset, limit);
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
 
-//         const totalDocuments = await countAllComments(onModel, commentableId);
-//         const totalPages = Math.ceil(totalDocuments / limit);
+export const deleteLikeService = async (id, onModel, likableId) => {
+    try {
+        const parent = await fetchLikableParent(onModel, likableId);
+      
+        if (!parent) {
+            throw {
+                status: 404,
+                message: `${onModel} not exists`
+            }
+        }
 
-//         return { comments, totalDocuments, totalPages };
 
-//     } catch (error) {
-//         console.log(error);
-//         throw error;
-//     }
-// }
+        await removeChildReactionFromParent(id, onModel, parent);
+
+        const deletedLike = await deleteLikeById(id);
+        console.log("Reaction deleted.")
+        return deletedLike;
+
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+
+
+
 
 
 
@@ -88,6 +104,20 @@ const addChildReactionToParent = async (onModel, like, parent) => {
             parent.likes.push(like._id);
         } else if (onModel.toLowerCase() === "comment") {
             parent.likes.push(like._id);
+        }
+        await parent.save();
+
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+const removeChildReactionFromParent = async (likeId, onModel, parent) => {
+    try {
+        if (onModel.toLowerCase() === "post") {
+            parent.likes.pull(likeId);
+        } else if (onModel.toLowerCase() === "comment") {
+            parent.likes.pull(likeId);
         }
         await parent.save();
 

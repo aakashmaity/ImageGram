@@ -41,8 +41,15 @@ export const findAllPosts = async (offset, limit) => {
 
 export const findPostMadeByUser = async (userId, offset, limit) => {
     try {
-        console.log("userId in repo:", userId);
-        const posts = await Post.find({ user: userId }).sort({ createdAt: -1 }).skip(Number(offset)).limit(Number(limit)).populate('user', 'username email _id');
+
+        const posts = await Post.find({ user: userId }).sort({ createdAt: -1 }).skip(Number(offset)).limit(Number(limit)).populate([
+            { path: 'user', select: 'username email _id' },
+            {
+                path: "likes",
+                select: "likeType user _id",
+                populate: { path: "user", select: "username _id" }
+            }
+        ]);
 
         return posts;
     } catch (error) {
@@ -52,7 +59,14 @@ export const findPostMadeByUser = async (userId, offset, limit) => {
 
 export const findPostById = async (postId) => {
     try {
-        const post = await Post.findById(postId)
+        const post = await Post.findById(postId).populate([
+            { path: 'user', select: 'username email _id' },
+            {
+                path: "likes",
+                select: "likeType user _id",
+                populate: { path: "user", select: "username _id" }
+            }
+        ])
         return post;
     } catch (error) {
         throw error;

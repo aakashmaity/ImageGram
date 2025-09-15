@@ -34,13 +34,3 @@ export const deleteLikeById = async (id) => {
         throw error;
     }
 }
-
-// export const findLikesMadeByUserId = async (userId, onModel, likableId) => {
-//     try {
-//         const likes = await Like.find({ userId, onModel, likableId }).populate('userId', 'username email _id');
-//         console.log("Likes in repo:", likes);
-//         return likes;
-//     } catch (error) {
-//         throw error;
-//     }
-// }

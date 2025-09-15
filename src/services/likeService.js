@@ -15,6 +15,14 @@ export const createLikeService = async (likeType, user, onModel, likableId) => {
             }
         }
 
+        const isExists = parent?.likes?.some(like => like?.user?._id.toString() == user.toString());
+
+        if(isExists) {
+            console.log("React is alraady exists for this user.")
+            return null;
+        }
+        
+
         const newLike = await createLike(likeType, user, onModel, likableId);
 
         await addChildReactionToParent(onModel, newLike, parent);

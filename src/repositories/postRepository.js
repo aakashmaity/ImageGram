@@ -1,9 +1,15 @@
-import { populate } from "dotenv";
 import Post from "../schema/post.js";
 
 export const createPost = async (caption, image, user) => {
     try {
-        const newPost = Post.create({ caption, image, user });
+        const newPost = (await Post.create({ caption, image, user })).populate([
+            { path: 'user', select: 'fullname username _id' },
+            {
+                path: "likes",
+                select: "likeType user _id",
+                populate: { path: "user", select: "_id" }
+            }
+        ]);
         return newPost;
     } catch (error) {
         throw error;
@@ -25,11 +31,11 @@ export const countAllPosts = async (userId = null) => {
 export const findAllPosts = async (offset, limit) => {
     try {
         const posts = await Post.find().sort({ createdAt: -1 }).skip(Number(offset)).limit(Number(limit)).populate([
-            { path: 'user', select: 'username email _id' },
+            { path: 'user', select: 'fullname username email _id' },
             {
                 path: "likes",
                 select: "likeType user _id",
-                populate: { path: "user", select: "username _id" }
+                populate: { path: "user", select: "_id" }
             }
         ])
 
@@ -43,11 +49,11 @@ export const findPostMadeByUser = async (userId, offset, limit) => {
     try {
 
         const posts = await Post.find({ user: userId }).sort({ createdAt: -1 }).skip(Number(offset)).limit(Number(limit)).populate([
-            { path: 'user', select: 'username email _id' },
+            { path: 'user', select: 'fullname username email _id' },
             {
                 path: "likes",
                 select: "likeType user _id",
-                populate: { path: "user", select: "username _id" }
+                populate: { path: "user", select: "_id" }
             }
         ]);
 
@@ -60,11 +66,11 @@ export const findPostMadeByUser = async (userId, offset, limit) => {
 export const findPostById = async (postId) => {
     try {
         const post = await Post.findById(postId).populate([
-            { path: 'user', select: 'username email _id' },
+            { path: 'user', select: 'fullname username email _id' },
             {
                 path: "likes",
                 select: "likeType user _id",
-                populate: { path: "user", select: "username _id" }
+                populate: { path: "user", select: "_id" }
             }
         ])
         return post;
@@ -82,7 +88,14 @@ export const deletePostById = async (id) => {
 }
 export const updatePostById = async (id, postData) => {
     try {
-        const response = await Post.findByIdAndUpdate(id, postData, { new: true });   // option: { new: true} helps to return new updated post object instead of old one
+        const response = await Post.findByIdAndUpdate(id, postData, { new: true }).populate([        // option: { new: true} helps to return new updated post object instead of old one
+            { path: 'user', select: 'fullname username email _id' },
+            {
+                path: "likes",
+                select: "likeType user _id",
+                populate: { path: "user", select: "_id" }
+            }
+        ]);   
         return response;
     } catch (error) {
         throw error;

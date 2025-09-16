@@ -4,7 +4,7 @@ import { signupUserService, getAllUsersService, signinUserService, findUserByIdS
 export async function getUserProfile(req, res) {
     try {
         const { id } = req.params
-        console.log("User id from params:", id)
+        
         const user = await findUserByIdService(id);
 
         return res.status(200).json({

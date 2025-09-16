@@ -6,7 +6,7 @@ export const signupUserService = async (user) => {
     try {
         const newUser = await createUser(user);
 
-        const token = generateToken({ email: newUser.email, _id: newUser._id, username: newUser.username, role: newUser.role || 'user' });
+        const token = generateToken({ fullname: newUser.fullname, email: newUser.email, _id: newUser._id, username: newUser.username, role: newUser.role || 'user' });
         return { token, newUser };
     } catch (error) {
         console.log(error)
@@ -42,7 +42,7 @@ export const signinUserService = async (userDetails) => {
             }
         }
 
-        const token = generateToken({ email: user.email, _id: user._id, username: user.username, role: user.role || 'user' });
+        const token = generateToken({ fullname: user.fullname, email: user.email, _id: user._id, username: user.username, role: user.role || 'user' });
         return token;
 
     } catch (error) {

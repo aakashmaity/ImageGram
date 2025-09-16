@@ -62,7 +62,7 @@ export const deletePostByIdService = async (id, user) => {
             }
         } 
 
-        if(postDetails.user != user) {   // if postDetails.user or owner is not the logedin user .(checking ids)
+        if(postDetails.user._id != user) {   // if postDetails.user or owner is not the logedin user .(checking ids)
             throw {
                 status: 401,
                 success: false,

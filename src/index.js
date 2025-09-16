@@ -30,7 +30,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // For cross origin resource sharing with frontend 
 app.use(cors({
-  origin: [process.env.FRONTEND_APP_URL, "http://localhost:3000"],
+  origin: [process.env.FRONTEND_APP_URL, "http://localhost:3000","https://imagegram-frontendddd.vercel.app"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));

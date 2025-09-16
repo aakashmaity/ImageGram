@@ -42,9 +42,9 @@ export async function updateLike(req, res) {
 
         const newLike = await updateLikeService(id, likeType, user, onModel, likableId);
     
-        return res.status(201).json({
+        return res.status(200).json({
             success: true,
-            message: "Like created successfully",
+            message: "Like updated successfully",
             newLike: newLike
         })
 

@@ -1,5 +1,37 @@
-import { createPostService, deletePostByIdService, getAllPostsService, getPostsMadeByUserService, updatePostByIdService } from "../services/postService.js";
+import { createPostService, deletePostByIdService, findPostByIdService, getAllPostsService, getPostsMadeByUserService, updatePostByIdService } from "../services/postService.js";
 
+export async function getPostById(req, res) {
+    try {
+        const postId = req.params?.id
+        const userId = req.user?._id
+
+        const { post } = await findPostByIdService(postId, userId);
+
+        if (!post) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found"
+            })
+        }
+
+        return res.json({
+            success: true,
+            message: "Post fetched Successfully",
+            post
+        })
+    } catch (error) {
+        if (error?.status) {
+            return res.status(error?.status).json({
+                success: false,
+                message: error?.message
+            })
+        }
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
+    }
+}
 
 export async function createPost(req, res) {
     // call the service layer function
@@ -115,7 +147,7 @@ export async function deletePost(req, res) {
         const user = req?.user?._id
         const postId = req.params?.id
 
-        const {response, totalDocuments} = await deletePostByIdService(postId, user);
+        const { response, totalDocuments } = await deletePostByIdService(postId, user);
 
         if (!response) {
             return res.status(404).json({

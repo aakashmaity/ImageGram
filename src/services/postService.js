@@ -14,6 +14,22 @@ export const createPostService = async (postobject) => {
         throw error;
     }
 }
+
+export const findPostByIdService = async (id, userId) => {
+    try {
+        const post = await findPostById(id);
+        const userLike = post.likes?.find(like => like?.user && like?.user?._id.toString() === userId.toString()) || null;
+        const postWithCurrUserLike = {
+            ...post.toObject?.() || post,
+            currentUserLike: userLike ? userLike : null
+        }
+
+        return { post: postWithCurrUserLike };
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
 export const getAllPostsService = async (userId, offset, limit) => {
     try {
         const posts = await findAllPosts(offset, limit)
@@ -26,7 +42,7 @@ export const getAllPostsService = async (userId, offset, limit) => {
 
             return {
                 ...post.toObject(),
-                currentUserLike : userLike ? userLike : null
+                currentUserLike: userLike ? userLike : null
             }
         })
 
@@ -54,27 +70,27 @@ export const deletePostByIdService = async (id, user) => {
     try {
 
         const postDetails = await findPostById(id);
-        if(!postDetails) {   // if post not found
+        if (!postDetails) {   // if post not found
             throw {
                 status: 404,
                 success: false,
                 message: "Post not found"
             }
-        } 
+        }
 
-        if(postDetails.user._id != user) {   // if postDetails.user or owner is not the logedin user .(checking ids)
+        if (postDetails.user._id != user) {   // if postDetails.user or owner is not the logedin user .(checking ids)
             throw {
                 status: 401,
                 success: false,
                 message: "Unauthorized to delete the post"
             }
-        } 
+        }
 
         const response = await deletePostById(id);
         const totalDocuments = await countAllPosts();
 
         console.log("Post deleted")
-        return {response, totalDocuments};
+        return { response, totalDocuments };
     } catch (error) {
         console.log(error);
         throw error;

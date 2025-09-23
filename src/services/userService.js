@@ -1,4 +1,4 @@
-import { createUser, findAllUsers, findSearchUsersRepo, findUserByEmail, findUserById } from "../repositories/userRepository.js"
+import { createUser, findAllUsers, findSearchUsersRepo, findUserByEmail, findUserById, verifyFollowAndUnfollowRequest } from "../repositories/userRepository.js"
 import bcrypt from "bcrypt"
 import { generateToken } from "../utils/jwt.js";
 
@@ -91,6 +91,36 @@ export const getSearchUsersService = async (search, offset, limit) => {
         return { users, totalDocuments };
     } catch (error) {
         console.log(error)
+        throw error;
+    }
+}
+
+export const followUserService = async (targetUserId, userId) => {
+    try {
+        const { targetUser, currentUser } = await verifyFollowAndUnfollowRequest(targetUserId, userId);
+
+
+        targetUser.followers.push(userId);
+        currentUser.following.push(targetUserId);
+
+        return { targetUser, currentUser };
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+export const unfollowUserService = async (targetUserId, userId) => {
+    try {
+        const { targetUser, currentUser } = await verifyFollowAndUnfollowRequest(targetUserId, userId);
+
+
+        targetUser.followers.pull(userId);
+        currentUser.following.pull(targetUserId);
+
+        return { targetUser, currentUser };
+    } catch (error) {
+        console.log(error);
         throw error;
     }
 }

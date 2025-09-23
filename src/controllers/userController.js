@@ -1,10 +1,10 @@
-import { signupUserService, getAllUsersService, signinUserService, findUserByIdService, getSearchUsersService } from "../services/userService.js"
+import { signupUserService, getAllUsersService, signinUserService, findUserByIdService, getSearchUsersService, followUserService, unfollowUserService } from "../services/userService.js"
 
 
 export async function getUserProfile(req, res) {
     try {
         const { id } = req.params
-        
+
         const user = await findUserByIdService(id);
 
         return res.status(200).json({
@@ -106,6 +106,61 @@ export async function getSearchUsers(req, res) {
             message: "Fetched all users",
             users,
             totalDocuments
+        })
+    } catch (error) {
+        if (error?.status) {
+            return res.status(error?.status).json({
+                success: false,
+                message: error?.message
+            })
+        }
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
+    }
+
+}
+
+export async function followUser(req, res) {
+    try {
+
+        const targetUserId = req.param?.id;
+        const userId = req.user?._id;
+        console.log(targetUserId, userId)
+        const { targetUser, currentUser } = await followUserService(targetUserId, userId);
+        return res.status(200).json({
+            success: true,
+            message: "Follow request successfull",
+            targetUser,
+            currentUser
+        })
+    } catch (error) {
+        if (error?.status) {
+            return res.status(error?.status).json({
+                success: false,
+                message: error?.message
+            })
+        }
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
+    }
+
+}
+
+export async function unfollowUser(req, res) {
+    try {
+
+        const targetUserId = req.param?.id;
+        const userId = req.user?._id;
+        const { targetUser, currentUser } = await unfollowUserService(targetUserId, userId);
+        return res.status(200).json({
+            success: true,
+            message: "Unfollow request successfull",
+            targetUser,
+            currentUser
         })
     } catch (error) {
         if (error?.status) {

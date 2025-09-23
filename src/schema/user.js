@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
         unique: true,
         minLength: 5,
         validate: {
-            validator: function(emailValue) {
+            validator: function (emailValue) {
                 return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailValue);
             },
             message: props => `${props.value} is Invalid email format`
@@ -38,7 +38,19 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'user',
         enum: ['user', 'admin']
-    }
+    },
+    followers: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ],
+    following: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ],
 }, { timestamps: true })
 
 

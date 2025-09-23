@@ -60,7 +60,16 @@ export const getPostsMadeByUserService = async (userId, offset, limit) => {
         const totalDocuments = await countAllPosts(userId);
         const totalPages = Math.ceil(totalDocuments / limit);
 
-        return { posts, totalDocuments, totalPages };
+        const postWithCurrUserLike = posts.map(post => {
+            const userLike = post.likes.find(like => like?.user && like?.user?._id.toString() === userId.toString());
+
+            return {
+                ...post.toObject(),
+                currentUserLike: userLike ? userLike : null
+            }
+        })
+
+        return { posts: postWithCurrUserLike, totalDocuments, totalPages };
     } catch (error) {
         console.log(error);
         throw error;

@@ -103,6 +103,9 @@ export const followUserService = async (targetUserId, userId) => {
         targetUser.followers.push(userId);
         currentUser.following.push(targetUserId);
 
+        targetUser.save();
+        currentUser.save();
+
         return { targetUser, currentUser };
     } catch (error) {
         console.log(error);
@@ -117,6 +120,10 @@ export const unfollowUserService = async (targetUserId, userId) => {
 
         targetUser.followers.pull(userId);
         currentUser.following.pull(targetUserId);
+
+
+        targetUser.save();
+        currentUser.save();
 
         return { targetUser, currentUser };
     } catch (error) {

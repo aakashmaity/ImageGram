@@ -32,9 +32,9 @@ router.post('/signup', validate(zodSighupSchema), signup);
 router.post('/signin', validate(zodSigninSchema), signin);
 
 // follow user
-router.put(':id/follow', isAuthenticated, followUser);
+router.put('/:id/follow', isAuthenticated, followUser);
 
 // unfollow user
-router.put(':id/unfollow', isAuthenticated, unfollowUser);
+router.put('/:id/unfollow', isAuthenticated, unfollowUser);
 
 export default router;

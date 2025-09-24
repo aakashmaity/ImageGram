@@ -125,9 +125,9 @@ export async function getSearchUsers(req, res) {
 export async function followUser(req, res) {
     try {
 
-        const targetUserId = req.param?.id;
+        const targetUserId = req.params?.id;
         const userId = req.user?._id;
-        console.log(targetUserId, userId)
+       
         const { targetUser, currentUser } = await followUserService(targetUserId, userId);
         return res.status(200).json({
             success: true,
@@ -153,7 +153,7 @@ export async function followUser(req, res) {
 export async function unfollowUser(req, res) {
     try {
 
-        const targetUserId = req.param?.id;
+        const targetUserId = req.params?.id;
         const userId = req.user?._id;
         const { targetUser, currentUser } = await unfollowUserService(targetUserId, userId);
         return res.status(200).json({

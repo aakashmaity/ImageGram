@@ -58,12 +58,21 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', function modifyPassword(next) {
     const user = this;
 
-    const salt = bcrypt.genSaltSync(9);
-    const hashedPassword = bcrypt.hashSync(user.password, salt)
+    if (!user.isModified('password')) {
+        return next();
+    }
+    
+    try {
+        const salt = bcrypt.genSaltSync(12);
+        const hashedPassword = bcrypt.hashSync(user.password, salt);
 
-    user.password = hashedPassword;
+        user.password = hashedPassword;
 
-    next();
+        next();
+    } catch (error) {
+        next(error);
+    }
+
 })
 
 

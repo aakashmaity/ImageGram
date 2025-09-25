@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
     fullname: {
         type: String,
         required: true,
-        minLength: 5
+        minLength: 3
     },
     avtar: {
         type: String,

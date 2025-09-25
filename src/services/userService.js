@@ -31,7 +31,7 @@ export const signinUserService = async (userDetails) => {
                 message: "User not found. Do register!"
             }
         }
-
+    
         const isPasswordValid = bcrypt.compareSync(userDetails?.password, user?.password);
 
         if (!isPasswordValid) {

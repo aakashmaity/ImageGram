@@ -2,21 +2,15 @@ import { checkIfUserExists } from "../services/userService.js";
 import { verifyJWT } from "../utils/jwt.js";
 
 export const isAuthenticated = async(req, res, next) => {
-
-    
-    const token = req.headers?.authorization || req.cookies?.authToken;
-    // console.log("cookieheader:",token)
-
-    if (!token) {
-      return res.status(401).json({ success: false, token, message: "No authToken cookies found" });
+    // Prefer Authorization header with Bearer token; fallback to authToken cookie
+    let token = req.headers?.authorization || req.cookies?.authToken;
+    // Normalize Bearer token format
+    if (typeof token === 'string' && token.startsWith('Bearer ')) {
+        token = token.slice(7).trim();
     }
 
-
-    if(!token) {
-        return res.status(400).json({
-            success: false,
-            message: "Token is required. Login again!"
-        })
+    if (!token) {
+        return res.status(401).json({ success: false, message: "Token is required. Login again!" });
     }
 
     // Verify token
@@ -37,7 +31,7 @@ export const isAuthenticated = async(req, res, next) => {
         next();
 
     } catch (error) {
-        return res.status(400).json({
+        return res.status(401).json({
             success: false,
             message: "Invalid token"
         })

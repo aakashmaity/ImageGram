@@ -32,7 +32,8 @@ export const signinUserService = async (userDetails) => {
             }
         }
 
-        const isPasswordValid = bcrypt.compareSync(userDetails?.password, user?.password);
+		// Use async compare to avoid blocking the event loop and ensure proper timing-safe comparison
+		const isPasswordValid = await bcrypt.compare(userDetails?.password || "", user?.password || "");
 
         if (!isPasswordValid) {
             throw {

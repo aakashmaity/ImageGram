@@ -35,7 +35,7 @@ export const createLikeService = async (likeType, user, onModel, likableId) => {
             const receiverId = lowerModel === 'post' ? parent?.user?._id : parent?.userId?._id;
             if (receiverId && receiverId.toString() !== user.toString()) {
                 const type = lowerModel === 'post' ? 'LIKE_POST' : 'LIKE_COMMENT';
-                const message = lowerModel === 'post' ? 'liked your post' : 'liked your comment';
+                const message = lowerModel === 'post' ? parent.caption : parent.content;
                 await notifyAndPersist({
                     type,
                     sender: user,

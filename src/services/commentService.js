@@ -31,7 +31,7 @@ export const createCommentService = async (content, userId, onModel, commentable
                         receiver: receiverId,
                         entityModel: 'Post',
                         entityId: commentableId,
-                        message: 'commented on your post'
+                        message: newComment?.content
                     });
                 }
             }

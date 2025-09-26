@@ -5,5 +5,5 @@ const router = express.Router();
 
 
 router.use("/v1", v1Router)     // If any URL starts with /api/v1, then forward to v1Router to handle the request
-
+// router.get("/notifications", isAuthenticated, getNotifications);
 export default router;

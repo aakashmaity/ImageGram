@@ -1,6 +1,7 @@
 import { findCommentById } from "../repositories/commentRepository.js";
 import { createLike, deleteLikeById, updateLikeById } from "../repositories/likeRepository.js";
 import { findPostById } from "../repositories/postRepository.js";
+import { notifyAndPersist } from "./notificationService.js";
 
 
 export const createLikeService = async (likeType, user, onModel, likableId) => {
@@ -28,6 +29,25 @@ export const createLikeService = async (likeType, user, onModel, likableId) => {
         await addChildReactionToParent(onModel, newLike, parent);
 
         console.log(`Reaction created with type: ${likeType}`)
+
+        try {
+            const lowerModel = onModel.toLowerCase();
+            const receiverId = lowerModel === 'post' ? parent?.user?._id : parent?.userId?._id;
+            if (receiverId && receiverId.toString() !== user.toString()) {
+                const type = lowerModel === 'post' ? 'LIKE_POST' : 'LIKE_COMMENT';
+                const message = lowerModel === 'post' ? 'liked your post' : 'liked your comment';
+                await notifyAndPersist({
+                    type,
+                    sender: user,
+                    receiver: receiverId,
+                    entityModel: lowerModel === 'post' ? 'Post' : 'Comment',
+                    entityId: likableId,
+                    message
+                });
+            }
+        } catch (notifyError) {
+            console.log('Failed to send like notification', notifyError);
+        }
         return newLike;
 
     } catch (error) {

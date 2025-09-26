@@ -1,4 +1,5 @@
 import express from "express";
+import http from "http";
 import connectDB from "./config/dbConfig.js";
 import apiRouter from "./routers/apiRouter.js"
 import swaggerUi from "swagger-ui-express";
@@ -7,6 +8,7 @@ import ip from "ip"
 import { rateLimit } from 'express-rate-limit'
 import cors from "cors"
 import cookieParser from "cookie-parser";
+import { initSocket } from "./socket.js";
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -70,8 +72,10 @@ if (!process.env.VERCEL) {
   (async () => {
     try {
       await connectDB();
-      app.listen(PORT, () => {
-        console.log(`🚀 Server running locally on port ${PORT}`);
+      const server = http.createServer(app);
+      initSocket(server);
+      server.listen(PORT, () => {
+        console.log(`🚀 Server + Socket running locally on port ${PORT}`);
       });
     } catch (err) {
       console.error("❌ Failed to start local server", err);

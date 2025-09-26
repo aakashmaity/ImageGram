@@ -1,6 +1,7 @@
 import { createUser, findAllUsers, findSearchUsersRepo, findUserByEmail, findUserById, verifyFollowAndUnfollowRequest } from "../repositories/userRepository.js"
 import bcrypt from "bcrypt"
 import { generateToken } from "../utils/jwt.js";
+import { notifyAndPersist } from "./notificationService.js";
 
 export const signupUserService = async (user) => {
     try {
@@ -105,6 +106,21 @@ export const followUserService = async (targetUserId, userId) => {
 
         targetUser.save();
         currentUser.save();
+
+        try {
+            if (targetUserId.toString() !== userId.toString()) {
+                await notifyAndPersist({
+                    type: 'FOLLOW_USER',
+                    sender: userId,
+                    receiver: targetUserId,
+                    entityModel: null,
+                    entityId: null,
+                    message: 'started following you'
+                });
+            }
+        } catch (notifyError) {
+            console.log('Failed to send follow notification', notifyError);
+        }
 
         return { targetUser, currentUser };
     } catch (error) {

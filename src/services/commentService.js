@@ -1,5 +1,6 @@
 import { countAllComments, createComment, findCommentById, findCommentsByCommentableId } from "../repositories/commentRepository.js"
 import { findPostById } from "../repositories/postRepository.js"
+import { notifyAndPersist } from "./notificationService.js";
 
 export const createCommentService = async (content, userId, onModel, commentableId) => {
     try {
@@ -18,6 +19,25 @@ export const createCommentService = async (content, userId, onModel, commentable
         await addChildCommentToParent(onModel, newComment, parent);
 
         console.log("New comment created")
+
+        try {
+            const lowerModel = onModel.toLowerCase();
+            if (lowerModel === 'post') {
+                const receiverId = parent?.user?._id;
+                if (receiverId && receiverId.toString() !== userId.toString()) {
+                    await notifyAndPersist({
+                        type: 'COMMENT_POST',
+                        sender: userId,
+                        receiver: receiverId,
+                        entityModel: 'Post',
+                        entityId: commentableId,
+                        message: 'commented on your post'
+                    });
+                }
+            }
+        } catch (notifyError) {
+            console.log('Failed to send comment notification', notifyError);
+        }
 
         return newComment;
 
